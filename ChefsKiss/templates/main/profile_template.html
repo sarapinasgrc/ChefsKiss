@@ -1,0 +1,34 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+<div class="profile-container">
+    <div class="profile-photo">
+        <img
+            src="{{ url_for('static', filename='photos/photo-' ~ profile.photo.id ~ '.' ~ profile.photo.file_extension) }}"
+            alt="Profile photo">
+    </div>
+    <div class="user-info">
+        <a href="{{ url_for('main.profile_detail', profile_id=profile.id) }}" class="profile-btn">{{ profile.name }}</a>
+        <p>{{profile.gender}}</br>
+            {{ 2024-profile.year_of_birth}} years old</p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="profile-actions">
+
+        <!-- Like Button -->
+        <form action="{{ url_for('main.like_user', user_id=profile.user_id) }}" method="POST">
+            <button type="submit" class="like-btn">
+                <i class="material-symbols-outlined">favorite</i>
+            </button>
+        
+        </form>
+
+        <!-- Block Button -->
+        <form action="{{ url_for('main.block_user', user_id=profile.user_id) }}" method="POST">
+            <button type="submit" class="block-btn">
+                <i class="material-symbols-outlined">block</i>
+            </button>
+        </form>
+
+
+    </div>
+</div>

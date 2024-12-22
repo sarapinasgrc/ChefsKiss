@@ -1,0 +1,23 @@
+<div class="profile-container">
+    <div class="profile-photo">
+        <img
+            src="{{ url_for('static', filename='photos/photo-' ~ profile.photo.id ~ '.' ~ profile.photo.file_extension) }}"
+            alt="Profile photo">
+    </div>
+    <div class="user-info">
+        <h3>{{ user.profile.name }}</h3>
+        <p>Year of birth: {{ user.profile.year_of_birth }}</p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="profile-actions">
+        <!-- Link to View Profile -->
+        <a href="{{ url_for('main.profile_detail', profile_id=profile.id) }}" class="btn btn-view-profile">View Profile</a>
+        <!-- Unblock Button -->
+        <form action="{{ url_for('main.unblock_user', user_id=user.id) }}" method="POST" style="display:inline;">
+            <button type="submit" class="btn btn-danger">Unblock</button>
+        </form>
+
+
+    </div>
+</div>

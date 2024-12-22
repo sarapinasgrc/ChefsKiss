@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="quiz-results-container">
+    <h2>Quiz Results for Proposal to {{ proposal.proposer.name }} and {{ proposal.recipient.name }}</h2>
+
+    <div class="quiz-answers">
+        <h4>{{ proposal.proposer.name }} Answers:</h4>
+        {% if quiz_results_proposer %}
+            <p><strong>What will you wear on the date?</strong> {{ quiz_results_proposer['question_1'] }}</p>
+            <p><strong>Who will pay for the date?</strong> {{ quiz_results_proposer['question_2'] }}</p>
+            <p><strong>What will you do after the date?</strong> {{ quiz_results_proposer['question_3'] }}</p>
+        {% else %}
+            <p>Proposer has not completed the quiz yet.</p>
+        {% endif %}
+    </div>
+
+    <div class="quiz-answers">
+        <h4>{{ proposal.recipient.name }} Answers:</h4>
+        {% if quiz_results_recipient %}
+            <p><strong>What will you wear on the date?</strong> {{ quiz_results_recipient['question_1'] }}</p>
+            <p><strong>Who will pay for the date?</strong> {{ quiz_results_recipient['question_2'] }}</p>
+            <p><strong>What will you do after the date?</strong> {{ quiz_results_recipient['question_3'] }}</p>
+        {% else %}
+            <p>Recipient has not completed the quiz yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Button Go Back -->
+<button onclick="window.history.back()" class="btn-back">Go Back</button>
+
+<!-- Info about the page -->
+<div class="quiz-footer">
+    <h5>Here you can see what the preferences of both users are for the date. This is just informative, everyone can wear whatever they wish, and the bill payee and plans after the date will be decided during the actual date.</h5>
+</div>
+{% endblock %}
+

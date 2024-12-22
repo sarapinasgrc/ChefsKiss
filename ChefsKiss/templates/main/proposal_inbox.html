@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Incoming Date Proposals</h1>
+    <h3>Has anyone sent you a date proposal? Answer them!</h3>
+    {% if proposals %}
+        <ul class="proposal-list">
+            {% for proposal in proposals %}
+                <li class="proposal-item">
+                    <div class="proposal-container">
+                    <div class = 'words-proposal'>
+                        <strong>Proposer: </strong><a href="{{ url_for('main.profile_detail', profile_id=proposal.proposer.id) }}" class="profile-btn">{{ proposal.proposer.name }}</a>
+                    <div class = 'words-proposal'>
+                        <strong>Proposal Date:</strong> {{ proposal.proposal_date }}
+                    </div>
+                    <div class = 'words-proposal'>
+                        <strong>Restaurant:</strong> {{ proposal.restaurant.name }}
+                    </div>
+                    <div class = 'words-proposal'>
+                        <strong>Message:</strong> {{ proposal.proposal_message or "No message provided" }}
+                    </div>
+
+                    <!-- Display status if the proposal has been answered -->
+                    <div class = 'status-proposal'>
+                        <strong>Status:</strong>
+                        {% if proposal.status == proposal.status.__class__.proposed %}
+                            <span>Pending <i class="material-symbols-outlined">pending</i></span>
+                        {% elif proposal.status == proposal.status.__class__.accepted %}
+                            <span class="status-accepted">Accepted <i class="material-symbols-outlined">sentiment_very_satisfied</i></span>
+                        {% elif proposal.status == proposal.status.__class__.rejected %}
+                            <span class="status-rejected">Rejected <i class="material-symbols-outlined">sentiment_dissatisfied</i></span>
+                        {% elif proposal.status == proposal.status.__class__.ignored %}
+                            <span class="status-ignored">Ignored <i class="material-symbols-outlined">sentiment_neutral</i></span>
+                        {% elif proposal.status == proposal.status.__class__.reschedule %}
+                            <span class="status-rescheduled">Rescheduled <i class="material-symbols-outlined">event_repeat</i></span>
+                        </div>
+                        <!-- Note the redirect to url line shows in red but it works correctly -->
+                        <div class = 'change-date'>    <button
+                            onclick="window.location.href='{{ url_for('main.propose_date_form', recipient_id=proposal.proposer.id) }}'"
+                            class="btn-propose-again">Change date</button>
+                                <p>(If not changed already)</p> </div>
+                        {% endif %}
+                    
+
+                    {% if proposal.status == proposal.status.__class__.proposed %}
+                        <form action="{{ url_for('main.respond_to_proposal', proposal_id=proposal.id) }}" method="POST">
+
+                            <!-- The users proposing can add optional message input for response -->
+                            <div class = 'response-date'>
+                                <textarea name="response_message" rows="3" placeholder="Add an optional response message"></textarea>
+                            </div>
+
+                            <div>
+                                <button type="submit" name="status" value="accept" class="main-btn">Accept</button>
+                                <button type="submit" name="status" value="reject" class="main-btn">Reject</button>
+                                <button type="submit" name="status" value="reschedule" class="main-btn">Reschedule</button>
+                                <button type="submit" name="status" value="ignore" class="main-btn">Ignore</button>
+                            </div>
+
+                        </form>
+                    {% endif %}
+                </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No proposals found in your inbox.</p>
+    {% endif %}
+{% endblock %}

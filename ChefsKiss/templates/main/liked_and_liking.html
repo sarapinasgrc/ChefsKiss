@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Liked Profiles</h1>
+
+    <div class="liked-by">
+        <h2 class="like-header">People Who Liked You</h2>
+        {% if liked_by_users %}
+            <ul>
+                {% for user in liked_by_users %}
+                    <li>
+                        <div class="profile-photo">
+                            <img
+                                src="{{ url_for('static', filename='photos/photo-' ~ user.profile.photo.id ~ '.' ~ user.profile.photo.file_extension) }}"
+                                alt="Profile photo">
+                        </div>
+                        <div class="user-info">
+                            <a href="{{ url_for('main.profile_detail', profile_id=user.id) }}" class="profile-btn">{{ user.name }}</a>
+                            <p>{{ 2024-user.year_of_birth}} years old</p>
+                        </div>
+                        {% if user not in current_user.blocking %}
+                            <!-- Block button for this user -->
+                            <form action="{{ url_for('main.block_user', user_id=user.id) }}" method="POST">
+                                <button type="submit" class="block-btn" >
+                                    <i class="material-symbols-outlined">block</i>
+                                </button>
+                            </form>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No one has liked you yet.</p>
+        {% endif %}
+    </div>
+
+    <div class="liking">
+        <h2 class="like-header">People You Liked</h2>
+        {% if liking_users %}
+            <ul>
+                {% for user in liking_users %}
+                    <li>
+                        <div class="profile-photo">
+                            <img
+                                src="{{ url_for('static', filename='photos/photo-' ~ user.profile.photo.id ~ '.' ~ user.profile.photo.file_extension) }}"
+                                alt="Profile photo">
+                        </div>
+                        <div class="user-info">
+                            <a href="{{ url_for('main.profile_detail', profile_id=user.id) }}" class="profile-btn">{{ user.name }}</a>
+                            <p>{{ 2024-user.year_of_birth}} years old</p>
+                        </div>
+                        {% if user not in current_user.blocking %}
+                            <!-- Block button for this user -->
+                            <form action="{{ url_for('main.block_user', user_id=user.id) }}" method="POST" >
+                                <button type="submit" class="block-btn">
+                                    <i class="material-symbols-outlined">block</i>
+                                </button>
+                            </form>
+                            
+                        {% endif %}
+                        <!-- Unlike button for the people you liked -->
+                        <form action="{{ url_for('main.unlike_user', user_id=user.id) }}" method="POST" >
+                            <button type="submit" class="like-btn">
+                                <i class="material-symbols-outlined">thumb_down</i>
+                            </button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>You haven't liked anyone yet.</p>
+        {% endif %}
+    </div>
+
+{% endblock %}

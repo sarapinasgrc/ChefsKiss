@@ -1,0 +1,75 @@
+<!-- TEMPLATE FOR DATE PROPOSALS -->
+{% extends "base.html" %}
+
+{% block content %}
+<form action="{{ url_for('main.propose_date', recipient_id=profile.id) }}" method="POST" class = "proposal-form">
+    <div>
+        <label for="proposal_date"><strong>Date of the Proposal:</strong></label>
+        <input type="date" id="proposal_date" name="proposal_date" required>
+    </div>
+
+    <div>
+        <label for="restaurant_id"><strong>Choose a Restaurant:</strong> </label>
+        <select id="restaurant_id" name="restaurant_id" required>
+            {% for restaurant in restaurants %}
+                <option value="{{ restaurant.id }}">{{ restaurant.name }} ({{ restaurant.food_type }})</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div id="availability-info">
+        <strong>Tables Available:</strong> <span id="available-tables">Select a date and restaurant to see availability.</span>
+    </div>
+
+    <div>
+        <label for="proposal_message"><strong>Message (optional):</strong></label>
+        <textarea id="proposal_message" name="proposal_message" maxlength="500" placeholder="Write a message..."></textarea>
+    </div>
+
+    <button type="submit" class="main-btn">Submit Proposal</button>
+</form>
+
+<script>
+    // This code of javascript is to check the table availability
+    const proposalDateInput = document.getElementById("proposal_date");
+    const restaurantSelect = document.getElementById("restaurant_id");
+    const availableTablesSpan = document.getElementById("available-tables");
+
+    function updateAvailability() {
+        const proposalDate = proposalDateInput.value;
+        const restaurantId = restaurantSelect.value;
+
+        // Checking that both the dates and restaurant were selected
+        if (!proposalDate || !restaurantId) {
+            availableTablesSpan.textContent = "Select a date and restaurant to see availability.";
+            return;
+        }
+
+        // We send AJAX request to the server
+        fetch(`/get_table_availability?proposal_date=${proposalDate}&restaurant_id=${restaurantId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    availableTablesSpan.textContent = data.error;
+                } else {
+                    availableTablesSpan.textContent = data.available_tables;
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching table availability:", error);
+                availableTablesSpan.textContent = "Unable to fetch availability.";
+            });
+    }
+
+    // Update availability dynamically
+    proposalDateInput.addEventListener("change", updateAvailability);
+    restaurantSelect.addEventListener("change", updateAvailability);
+</script>
+
+
+   <div>
+    <button type="button" class="back-link" onclick="window.location.href='/index'">Back to Profiles</button>
+    </div>
+
+
+{% endblock %}

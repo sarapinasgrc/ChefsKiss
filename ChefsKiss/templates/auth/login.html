@@ -1,0 +1,45 @@
+<head>
+    <title>Login | Chef's Kiss</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+
+    <h1 class="header-title">Chef's Kiss</h1>
+
+    <div class="login-form-container">
+    <h2 class="sig-log" >Log In</h2>
+    <form action="{{ url_for('auth.login_post') }}" method="post">
+        <div class="form-group">
+            <input type="email" name="email" placeholder="Email" required/>
+            <i class="material-symbols-outlined">person</i>
+        </div>
+        <div class="form-group">
+            <input type="password" name="password" placeholder="Password" required/>
+            <i class="material-symbols-outlined">lock</i>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Login" class="btn"/>
+        </div>
+    
+        <div class="login-form-link">
+            <p> Don't have an account? <a href="{{ url_for('auth.signup') }}">Sign Up</a></p>
+        </div>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</div>
+</body>

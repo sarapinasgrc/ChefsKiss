@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1>Proposal Analytics</h1>
+    <p>Here you can see the analytics of the proposals you sent!</p>
+    <div class="proposal-container">
+
+    <div>
+        <p><strong>Total Proposals:</strong> {{ analytics.total_proposals }}</p>
+        <p><strong>Accepted Proposals:</strong> {{ analytics.accepted_proposals }}</p>
+        <p><strong>Rejected Proposals:</strong> {{ analytics.rejected_proposals }}</p>
+        <p><strong>Ignored Proposals:</strong> {{ analytics.ignored_proposals }}</p>
+        <p><strong>Rescheduled Proposals:</strong> {{ analytics.rescheduled_proposals }}</p>
+    </div>
+
+    <p><strong>Your Chosen Restaurants:</strong></p>
+    <ul id = restaurants_chosen>
+        {% for restaurant, count in analytics.popular_restaurants %}
+            <li>{{ restaurant }}: {{ count }} proposals</li>
+        {% endfor %}
+    </ul>
+</div>
+    <h3>Proposal Statistics Chart</h3>
+    <canvas id="proposalChart"></canvas>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // We have created a chart for the analytics
+        const ctx = document.getElementById('proposalChart').getContext('2d');
+        const proposalChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Accepted', 'Rejected', 'Ignored', 'Rescheduled'],
+                datasets: [{
+                    data: [
+                        {{ analytics.accepted_proposals }},
+                        {{ analytics.rejected_proposals }},
+                        {{ analytics.ignored_proposals }},
+                        {{ analytics.rescheduled_proposals }}
+                    ],
+                    backgroundColor: ['#4caf50', '#f44336', '#ff9800', '#2196f3'],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                },
+
+            }
+        });
+    </script>
+{% endblock %}

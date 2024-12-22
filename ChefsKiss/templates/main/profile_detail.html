@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="profile-detail">
+        <h1>{{ profile.name }}'s Profile</h1>
+        
+
+        <img src="{{ url_for('static', filename='photos/photo-' ~ photo.id ~ '.' ~ photo.file_extension) }}" 
+                 alt="{{ profile.name }}'s Profile Picture" 
+                 class="profile-photo" 
+                 style="width: 150px; height: 150px; object-fit: cover;">
+        <p><strong>Year of birth:</strong> {{ profile.year_of_birth }}</p>
+        <p><strong>Gender:</strong> {{ profile.gender }}</p>
+
+        
+        <h3>About Me</h3>
+        <p class="profilebio">{{ profile.bio }}</p>
+        
+        <h3>Interests</h3>
+        <p class="profilebio">{{ profile.interests }}</p>
+        <!-- Propose Date Button -->
+        {% if profile.id not in my_blocked_user_ids %}
+            <button
+                onclick="window.location.href='{{url_for('main.propose_date_form', recipient_id=profile.id)}}'"
+                class="main-btn">Propose a Date</button>
+        {% else %}
+            <p>You blocked this user!</p>
+        {% endif %}
+
+        <!-- The go back buttons redirects you to the previous page visited -->
+        <a href="javascript:history.back()" class="back-link">Go Back</a>
+    </div>
+{% endblock %}

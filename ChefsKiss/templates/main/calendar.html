@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="calendar-header">
+    <h1>Dating Schedule 🍝</h1>
+</div>    
+
+    <div id="calendar-container">
+        <div id="calendar"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+    let calendarEl = document.getElementById('calendar');
+
+    let calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: '/get_user_events', 
+        eventColor: '#3788d8', 
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+    });
+
+    calendar.render();
+});
+    </script>
+
+{% endblock %}

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Home | Chef's Kiss</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- CSS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Home section -->
+    <section class="home" id="home">
+        <div class="home-content">
+            <h3>Chef's Kiss</h3>
+            <p>Where love is always served fresh.</p>
+            <a href="{{ url_for('auth.login') }}" class="btn">Log In</a>
+            <a href="{{ url_for('auth.signup') }}" class="btn">Sign Up</a>
+        </div>
+    </section>
+</body>
+</html>

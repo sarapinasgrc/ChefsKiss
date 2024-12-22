@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chef's Kiss</title>
+    <!-- Google Fonts for Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+
+    <!-- FullCallendar styling -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+
+    <!-- FullCalendar Script -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+    <!-- Fonts APIs for the fonts to work in the IT computers -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    {% if current_user.is_authenticated %}
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="{{ url_for('static', filename='photos/photo-' ~ current_user.profile.photo.id ~ '.' ~ current_user.profile.photo.file_extension) }}" 
+                        alt="Profile photo" 
+                        style="width: 50px; height: 50px; object-fit: cover;"
+                        class="sidebar-photo-user">
+                    
+            <h3>{{ current_user.name }}</h3>
+                    
+        </div>
+
+        <ul class="sidebar-links">
+            <h4>Main Menu</h4>
+            <li>
+                <a href="{{ url_for('main.index') }}"><span class="material-symbols-outlined">home</span>Find New People</a>
+            </li>
+            <li>
+                <a href="{{ url_for('main.calendar') }}"><span class="material-symbols-outlined">calendar_month</span>Calendar</a>
+            </li>
+            <li>
+                <a href="{{ url_for('main.proposal_inbox') }}"><span class="material-symbols-outlined">forward_to_inbox</span>Proposals Inbox</a>
+            </li>
+            <li>
+                <a href="{{ url_for('main.sent_proposals') }}"><span class="material-symbols-outlined">schedule</span>Proposals Sent</a>
+            </li>
+            <li>
+                <a href="{{ url_for('main.upcoming_dates') }}"><span class="material-symbols-outlined">heart_check</span>Upcoming Dates</a>
+            </li>
+            <li>
+                <a href="{{ url_for('main.liked_and_liking') }}"><span class="material-symbols-outlined">recommend</span>Liked Profiles</a>
+            </li>
+            <li>
+                <a href="{{ url_for('main.blocked_users') }}"><span class="material-symbols-outlined">block</span>Blocked Profiles</a>
+            </li>
+            <li>
+                <a href="{{ url_for('main.get_map') }}"><span class="material-symbols-outlined">dinner_dining</span>Restaurants Map</a>
+            </li>
+
+            </ul>
+        <ul class="sidebar-links">
+            <h4>My Account</h4>
+            <li>
+                <a href="{{ url_for('main.my_profile', name=current_user.name) }}">
+                    <span class="material-symbols-outlined">person</span>Profile
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('main.analytics') }}"><span class="material-symbols-outlined">analytics</span>Analytics</a>
+            </li>
+            <li>
+                <a href="{{ url_for('main.settings') }}"><span class="material-symbols-outlined">settings</span>Settings</a>
+            </li>
+            <li>
+                <a href="{{ url_for('auth.logout') }}">
+                    <span class="material-symbols-outlined">logout</span> Log Out
+                </a>
+            </li>
+        </ul>
+
+        <!-- Sidebar Footer -->
+        <div class="sidebar-logo-web">
+            <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="logo" class="sidebar-logo-photo">
+            <h3>Chef's Kiss</h3>
+        </div>
+    </aside>
+    {% endif %}
+
+    <section class="content">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                <div class="flash-message {{ category }}">
+                    <p>{{ message }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Main Content -->
+        {% block content %}
+        {% endblock %}
+    </section>
+</body>
+
+</html>

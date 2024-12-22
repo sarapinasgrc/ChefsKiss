@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ restaurant.name }}</title>
+</head>
+<body>
+    <h1>{{ restaurant.name }}</h1>
+    <p><strong>Description:</strong> {{ restaurant.description }}</p>
+    <div>
+    <button type="button" class="back-link" onclick="window.location.href='/map'">Back to Map</button>
+    </div>
+
+</body>
+</html>
+
+{% endblock %}

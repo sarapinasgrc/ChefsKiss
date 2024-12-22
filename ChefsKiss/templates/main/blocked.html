@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Blocked Profiles</h1>
+    <div class="blocked">
+        {% if my_blocked_users %}
+                {% for user in my_blocked_users %}
+                    <div class="blocked-profile">
+                        <div class="profile-photo">
+                            <img
+                                src="{{ url_for('static', filename='photos/photo-' ~ user.profile.photo.id ~ '.' ~ user.profile.photo.file_extension) }}"
+                                alt="Profile photo">
+                        </div>
+                        <div class="user-info">
+                            <a href="{{ url_for('main.profile_detail', profile_id=user.profile.id) }}" class="profile-btn">{{ user.profile.name }}</a>
+                            <p>{{ 2024-user.profile.year_of_birth}} years old</p>
+                        </div>
+                        <form action="{{ url_for('main.unblock_user', user_id=user.id) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="block-btn">  
+                                <i class="material-symbols-outlined">undo</i>Unblock
+                            </button>
+                        </form>
+                    </div>
+                {% endfor %}
+        {% else %}
+            <p>You have not blocked any users yet.</p>
+        {% endif %}
+    </div>
+{% endblock %}

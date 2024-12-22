@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="my_profile-container">
+
+        <!-- Profile Picture -->
+        <div class="my_profile-photo">
+            <img src="{{ url_for('static', filename='photos/photo-' ~ photo.id ~ '.' ~ photo.file_extension) }}" 
+            alt="Profile photo" 
+            style="width: 150px; height: 150px; object-fit: cover;">
+        </div>
+
+        <!-- User Information -->
+            <h3>{{ user.name }} {{ user.lastname }}</h3>
+            <div class="user-info">
+                <p><strong>Gender:</strong> {{ user.gender }}</br>
+                    <strong>Year of Birth:</strong> {{ user.year_of_birth }}</p>
+            </div>
+
+            <div class="user-interests">
+                {% if user.profile.interests %}
+                <p><strong>My Interests:</strong></br>
+                    {{ user.profile.interests }}</p>
+                {% else %}
+                    <p>No interests yet.</p>
+                {% endif %}
+            </div>
+
+            <!-- User Description -->
+            <div class="user-description">
+
+                <p><strong>Biography:</strong></br>
+                {{ user.profile.bio }}</p>
+            </div>
+        
+
+    </div>
+{% endblock %}

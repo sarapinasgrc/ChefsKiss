@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Your Sent Invitations</h1>
+    <h3>Waiting for a response? Check it here!</h3>
+    {% if proposals %}
+        <ul class="proposal-list">
+            {% for proposal, restaurant_name in proposals %}
+                <li class="proposal-item">
+                    <div class="proposal-container">
+                    <div class = 'words-proposal'>
+                        <strong>Recipient:</strong> {{ proposal.recipient.name }} (Born in {{ proposal.recipient.year_of_birth }})
+                    </div>
+                    <div class = 'words-proposal'>
+                        <strong>Restaurant:</strong> {{ restaurant_name }}
+                    </div>
+                    <div class = 'words-proposal'>
+                        <strong>Date:</strong> {{ proposal.proposal_date }}
+                    </div>
+                    <div class = 'words-proposal'>
+                        <strong>Message:</strong> {{ proposal.proposal_message }}
+                    </div>
+                    <div class = 'words-proposal'>
+                        <strong>Status:</strong>
+                        {% if proposal.status == proposal.status.__class__.proposed %}
+                            <span>Pending</span>
+                        {% elif proposal.status == proposal.status.__class__.accepted %}
+                            <span>Accepted</span>
+                        {% elif proposal.status == proposal.status.__class__.rejected %}
+                            <span>Rejected</span>
+                        {% elif proposal.status == proposal.status.__class__.ignored %}
+                            <span>Ignored</span>
+                        {% elif proposal.status == proposal.status.__class__.reschedule %}
+                            <span>Rescheduled</span>
+                        {% endif %}
+                    </div>
+                </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You haven't sent any proposals yet.</p>
+    {% endif %}
+{% endblock %}

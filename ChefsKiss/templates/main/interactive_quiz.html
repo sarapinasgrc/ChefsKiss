@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="quiz-container">
+    <h1>INTERACTIVE DATE QUIZ</h1>
+    <div id="quiz-step" data-step="1">
+        <p>Question 1: How would you like to dress for the date?</p>
+        <button class="quiz-option" data-answer="Casual">Casual</button>
+        <button class="quiz-option" data-answer="Formal">Formal</button>
+        <button class="quiz-option" data-answer="Trendy">Trendy</button>
+        <button class="quiz-option" data-answer="Sporty">Sporty</button>
+    </div>
+
+    <div id="quiz-progress">
+        <span>Step 1 of 3</span>
+    </div>
+
+    <button id="next-button" disabled>Next</button>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const quizContainer = document.getElementById("quiz-container");
+        const nextButton = document.getElementById("next-button");
+        const quizStep = document.getElementById("quiz-step");
+        const progress = document.getElementById("quiz-progress");
+
+        let currentStep = 1;
+        const totalSteps = 3;
+        const answers = {};
+
+        quizContainer.addEventListener("click", (event) => {
+            if (event.target.classList.contains("quiz-option")) {
+                // Record the selected answer
+                const answer = event.target.dataset.answer;
+                answers[`question_${currentStep}`] = answer;
+
+                // Highlight the selected option
+                const options = document.querySelectorAll(".quiz-option");
+                options.forEach(option => option.style.backgroundColor = "");
+                event.target.style.backgroundColor = "#cac4c5";
+
+                nextButton.disabled = false; // Next button enabled
+            }
+        });
+
+        nextButton.addEventListener("click", () => {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                // we have to update the quiz question dynamically
+
+                quizStep.dataset.step = currentStep;
+                quizStep.innerHTML = getQuestionContent(currentStep);
+                progress.innerHTML = `<span>Step ${currentStep} of ${totalSteps}</span>`;
+                nextButton.disabled = true; // Disable until an option is selected
+            } else {
+                // Quiz complete, submit answers to the backend
+                submitQuizAnswers(answers);
+            }
+        });
+
+        function getQuestionContent(step) {
+            if (step === 2) {
+                return `<p>Question 2: Who will pay for the date?</p>
+                    <button class="quiz-option" data-answer="Split">Split the bill</button>
+                    <button class="quiz-option" data-answer="One person">One person pays</button>
+                    <button class="quiz-option" data-answer="Alternate">Alternate each time</button>`;
+            } else if (step === 3) {
+                return `<p>Question 3: What would you like to do after the date?</p>
+                    <button class="quiz-option" data-answer="Coffee">Coffee</button>
+                    <button class="quiz-option" data-answer="Walk">Walk in the park</button>
+                    <button class="quiz-option" data-answer="Movie">Movie</button>
+                    <button class="quiz-option" data-answer="Nothing">Nothing</button>`;
+            }
+        }
+
+        function submitQuizAnswers(answers) {
+            fetch("/submit_quiz_answers", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(answers)
+            })
+            .then(response => response.json())
+            .then(data => {
+
+                alert("Quiz completed! Thank you for submitting.");
+
+                window.location.href = "/index"; // Redirect to the summary page
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    });
+</script>
+{% endblock %}

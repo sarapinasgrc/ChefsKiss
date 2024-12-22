@@ -1,0 +1,157 @@
+<head>
+    <title>SignUp | Chef's Kiss</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap" rel="stylesheet">
+</head>
+<body>
+<h1 class="header-title"> Chef's Kiss </h1>
+<div class="signup-container">
+<h2 class="sig-log">Create an Account</h2>
+<form action="{{ url_for('auth.signup') }}" method="post" enctype="multipart/form-data" class="signup-form">
+    <div class="form-column">
+        <div class="form-group">
+            <input type="text" name="name" placeholder="Name" required />
+        </div>
+        <div class="form-group">
+        <input type="password" id="password" name="password" placeholder="Password" required />
+        <small id="password-length-error" style="color: red; display: none;">Password must be at least 3 characters long!</small>
+        </div>
+        <div class="form-group">
+            <input type="email" name="email" placeholder="Email" required />
+        </div>
+        <div class="form-group">
+            <select name="gender" required>
+                <option value="">Select your Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="number" id="min-age-difference" name="min_age_difference" placeholder="Lower Age Gap Preference" min="0" max="100" required/>
+        </div>
+        <div class="form-group">
+            <input type="text" name="interests" placeholder="Your interests (e.g., hiking, reading, coding)" />
+        </div>
+        <div class="file-upload">
+            <label for="photo-upload" class="btn-upload">Select your Profile Picture</label>
+            <input id="photo-upload" type="file" name="photo" accept="image/jpeg,image/png">
+            <small id="photo-error" style="color: red; display: none;">Profile picture is required!</small>
+        </div>
+
+
+    </div>
+    
+    <div class="form-column">
+        <div class="form-group">
+            <input type="text" name="lastname" placeholder="Last Name" required />
+        </div>
+        
+        <div class="form-group">
+        <input type="password" id="password-repeat" name="password_repeat" placeholder="Repeat Password" required />
+        <small id="password-error" style="color: red; display: none;">Passwords do not match!</small>
+        </div>
+
+        <div class="form-group">
+            <input
+                type="number" id="year-of-birth" name="year_of_birth" placeholder="Year of Birth" min="1900" max="2007" required  oninput="updateAgeGapMax()"               
+            />
+        </div>
+
+        <div class="form-group">
+            <select name="gender_preference" required>
+                <option value="">Select your Gender Preference</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="both">Both</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="number" name="max_age_difference" placeholder="Upper Age Gap Preference" min="0" max="100" required />
+        </div>
+
+        <div class="form-group">
+            <textarea name="bio" placeholder="Write a short bio about yourself" required></textarea>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Signup" class="btn" />
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% endwith %}
+    </div>        
+</form>
+
+</div>
+
+
+
+<script>
+    // We created a javascript code that checks for the following conditions:
+    //         - Password length
+    //         - Password = Repeat Passwork
+    //         - Min and max age preference (This is also handled in the form but just in case)
+
+    function updateAgeGapMax() {
+    const yearOfBirthInput = document.getElementById("year-of-birth");
+    const minAgeDifferenceInput = document.getElementById("min-age-difference");
+    const yearOfBirth = parseInt(yearOfBirthInput.value, 10);
+
+    if (!isNaN(yearOfBirth)) {
+        const currentYear = new Date().getFullYear();
+        const maxAgeDifference = currentYear - yearOfBirth;
+        minAgeDifferenceInput.max = maxAgeDifference-18;
+        
+    }}
+
+    document.querySelector('.signup-form').addEventListener('submit', function (e) {
+        const password = document.getElementById('password').value;
+        const passwordRepeat = document.getElementById('password-repeat').value;
+        const photoUpload = document.getElementById('photo-upload');
+        const lengthError = document.getElementById('password-length-error');
+        const matchError = document.getElementById('password-error');
+        const photoError = document.getElementById('photo-error');
+
+        let valid = true;
+
+        // Check for minimum password length
+        if (password.length < 3) {
+            e.preventDefault(); // Prevent form submission
+            lengthError.style.display = 'block'; // Show length error message
+            valid = false;
+        } else {
+            lengthError.style.display = 'none';
+        }
+
+        // Check for matching passwords
+        if (password !== passwordRepeat) {
+            e.preventDefault(); // Prevent form submission
+            matchError.style.display = 'block'; // Show match error message
+            valid = false;
+        } else {
+            matchError.style.display = 'none';
+        }
+
+        // Check if photo is uploaded
+        if (!photoUpload.value) {
+            e.preventDefault(); // Prevent form submission
+            photoError.style.display = 'block'; // Show photo error message
+            valid = false;
+        } else {
+            photoError.style.display = 'none';
+        }
+
+        return valid;
+    });
+
+</script>
+</body>
+

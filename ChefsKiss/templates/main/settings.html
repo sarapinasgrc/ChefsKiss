@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="settings-container">
+    <h3>Update Your Settings</h3>
+    
+    <form method="POST" enctype="multipart/form-data">
+      <!-- Basic Information -->
+      <div class="settings-form-group">
+        <label for="name">First Name</label>
+        <input type="text" class="form-control" id="name" name="name" value="{{ user.name }}" required>
+      </div>
+      
+      <div class="settings-form-group">
+        <label for="lastname">Last Name</label>
+        <input type="text" class="form-control" id="lastname" name="lastname" value="{{ user.lastname }}" required>
+      </div>
+      
+      <div class="settings-form-group">
+        <label for="gender">Gender</label>
+        <select class="form-control" id="gender" name="gender" required>
+          <option value="Male" {% if user.gender=="Male" %}selected{% endif %}>Male</option>
+          <option value="Female" {% if user.gender=="Female" %}selected{% endif %}>Female</option>
+        </select>
+      </div>
+
+      <div class="settings-form-group">
+        <label for="year_of_birth">Year of Birth</label>
+        <input type="number" class="form-control" id="year_of_birth" name="year_of_birth" value={{user.year_of_birth}} min="1900" max="2007" required  oninput="updateAgeGapMax()">
+      </div>
+
+      <!-- Profile Bio -->
+      <div class="settings-form-group">
+        <label for="bio">Bio</label>
+        <textarea class="form-control" id="bio" name="bio" rows="4">{{ user.profile.bio if user.profile else '' }}</textarea>
+      </div>
+
+      <div class="settings-form-group">
+        <label>Interests</label>
+        <textarea class="form-control" name="interests" rows="4">{{ user.profile.interests if user.profile else '' }}</textarea>
+      </div>
+
+      <div class="settings-form-group">
+        <label for="photo">Profile Photo (Click Here)</label>
+        <input type="file" name="photo" id="photo" 
+               value="{{ url_for('static', filename='photos/photo-' ~ user.profile.photo.id ~ '.' ~ user.profile.photo.file_extension) if user.profile.photo else '' }}">
+      </div>
+
+      <!-- Matching Preferences -->
+      <h4>Matching Preferences</h4>
+
+      <div class="settings-form-group">
+        <label for="gender_preference">Gender Preference</label>
+        <select class="form-control" id="gender_preference" name="gender_preference">
+          <option value="male" {% if user.matching_preferences.gender_preference == user.matching_preferences.gender_preference.__class__.male %}selected{% endif %}>Male</option>
+          <option value="female" {% if user.matching_preferences.gender_preference == user.matching_preferences.gender_preference.__class__.female %}selected{% endif %}>Female</option>
+          <option value="both" {% if user.matching_preferences.gender_preference == user.matching_preferences.gender_preference.__class__.both %}selected{% endif %}>Both</option>
+        </select>
+      </div>
+
+      <div class="settings-form-group">
+      <label>Lower Age Gap</label>
+      <input type="number" id="min-age-difference" name="min_age_difference" value={{user.matching_preferences.lower_year_preference-user.year_of_birth}} min="0" max="{{2007-user.year_of_birth}}" required/>
+      </div>
+
+
+      <div class="settings-form-group">
+        <label>Upper Age Gap</label>
+        <input type="number" id="max-age-difference" name="max_age_difference" min="0" max="100" value={{user.year_of_birth-user.matching_preferences.upper_year_preference}} required />
+      </div>
+
+      <button type="submit" class="main-btn">Save Changes</button>
+    </form>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+          <ul>
+              {% for category, message in messages %}
+                  <li class="{{ category }}">{{ message }}</li>
+              {% endfor %}
+          </ul>
+      {% endif %}
+    {% endwith %}
+    {% endblock %}
+    
+</div>
+

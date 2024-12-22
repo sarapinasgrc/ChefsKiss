@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Upcoming Dates</h1>
+
+<div class="upcoming-dates-container">
+    {% if accepted_dates %}
+        {% for date in accepted_dates %}
+        <li class="upcoming-date-list">
+            <!-- Date details (to the left) -->
+            <div class="date-details">
+                <p><strong>Date:</strong> {{ date.proposal_date }}</p>
+                <p><strong>Restaurant:</strong> {{ date.restaurant.name }} ({{ date.restaurant.food_type }})</p>
+                <p><strong>Proposed by:</strong> {{ date.proposer.name }}</p>
+                <p><strong>Proposed to:</strong> {{ date.recipient.name }}</p>
+                <p><strong>Message:</strong> {{ date.proposal_message or "No message provided." }}</p>
+            </div>
+
+            <!-- Actions (to the right) -->
+            <div class="date-actions">
+                {% if date.status == date.status.__class__.accepted %}
+                    {% if date.proposer.id == current_user.id and not date.quiz_results_proposer %}
+                        <form action="{{ url_for('main.interactive_quiz', proposal_id=date.id) }}" method="GET">
+                            <button type="submit" class="main-btn">Take Your Quiz</button>
+                        </form>
+                    {% elif date.recipient.id == current_user.id and not date.quiz_results_recipient %}
+                        <form action="{{ url_for('main.interactive_quiz', proposal_id=date.id) }}" method="GET">
+                            <button type="submit" class="main-btn">Take Your Quiz</button>
+                        </form>
+                    {% else %}
+                        <p>Quiz Already Completed</p>
+                    {% endif %}
+
+                    {% if date.quiz_results_proposer and date.quiz_results_recipient %}
+                        <a href="{{ url_for('main.view_quiz_results', proposal_id=date.id) }}" class="main-btn">View Quiz Results</a>
+                    {% elif date.quiz_results_proposer %}
+                        <p>Proposer has completed the quiz, waiting for the recipient.</p>
+                    {% elif date.quiz_results_recipient %}
+                        <p>Recipient has completed the quiz, waiting for the proposer.</p>
+                    {% else %}
+                        <p>Neither user has completed the quiz yet.</p>
+                    {% endif %}
+                {% else %}
+                    <p>Status: {{ date.status }}</p>
+                {% endif %}
+            </div>
+        </li>
+    {% endfor %}
+    {% else %}
+        <p>No upcoming dates. Check back later!</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+

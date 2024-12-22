@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="profiles">
+    <h1>Discover Your Perfect Match</h1>
+    {% if profiles %}
+        <p>Click on the names to see the profiles and propose dates!</p>
+        {% for profile in profiles %}
+            {% include 'main/profile_template.html' %}
+        {% endfor %}
+    {% else %}
+        <p>No profiles available at the moment. Check back later or change your preferences!</p>
+    {% endif %}
+    </div>
+{% endblock %}
+
